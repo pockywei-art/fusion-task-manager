@@ -22,6 +22,7 @@ import {
 import { List, Task } from "@/types/database";
 import { Column } from "./Column";
 import { TaskCard } from "./TaskCard";
+import { TaskModal } from "./TaskModal";
 
 // Mock initial data
 const INITIAL_LISTS: List[] = [
@@ -31,15 +32,16 @@ const INITIAL_LISTS: List[] = [
 ];
 
 const INITIAL_TASKS: Task[] = [
-    { id: "task-1", list_id: "list-1", title: "設計系統實作", description: "", position: 1, start_date: null, end_date: "2024-02-10", assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
-    { id: "task-2", list_id: "list-1", title: "使用者驗證函式庫", description: "", position: 2, start_date: null, end_date: "2024-02-12", assignee_id: null, priority: "medium", status: "todo", created_at: "", updated_at: "" },
-    { id: "task-3", list_id: "list-2", title: "看板拖放邏輯", description: "", position: 1, start_date: null, end_date: "2024-02-05", assignee_id: null, priority: "high", status: "doing", created_at: "", updated_at: "" },
+    { id: "task-1", list_id: "list-1", title: "設計系統實作", description: "實作基於大地色系的設計系統，包含色彩規範與陰影細節。", position: 1, start_date: null, end_date: "2024-02-10", assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
+    { id: "task-2", list_id: "list-1", title: "使用者驗證函式庫", description: "串接 Supabase Auth 進行 Google 第三方登入驗證。", position: 2, start_date: null, end_date: "2024-02-12", assignee_id: null, priority: "medium", status: "todo", created_at: "", updated_at: "" },
+    { id: "task-3", list_id: "list-2", title: "看板拖放邏輯", description: "使用 dnd-kit 實作流暢的卡片拖放與排序功能。", position: 1, start_date: null, end_date: "2024-02-05", assignee_id: null, priority: "high", status: "doing", created_at: "", updated_at: "" },
 ];
 
 export function KanbanBoard() {
     const [lists, setLists] = useState(INITIAL_LISTS);
     const [tasks, setTasks] = useState(INITIAL_TASKS);
     const [activeTask, setActiveTask] = useState<Task | null>(null);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
@@ -104,8 +106,26 @@ export function KanbanBoard() {
         setActiveTask(null);
     }
 
+    const addTask = (listId: string) => {
+        const newTask: Task = {
+            id: `task-${Date.now()}`,
+            list_id: listId,
+            title: "新任務名稱",
+            description: "",
+            position: tasks.length + 1,
+            start_date: null,
+            end_date: new Date().toISOString(),
+            assignee_id: null,
+            priority: "medium",
+            status: "todo",
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString(),
+        };
+        setTasks([...tasks, newTask]);
+    };
+
     return (
-        <div className="flex h-full overflow-x-auto gap-6 pb-6 scrollbar-hide">
+        <div className="flex h-full overflow-x-auto gap-8 pb-6 scrollbar-hide">
             <DndContext
                 sensors={sensors}
                 collisionDetection={closestCorners}
@@ -113,22 +133,31 @@ export function KanbanBoard() {
                 onDragOver={onDragOver}
                 onDragEnd={onDragEnd}
             >
-                <div className="flex gap-6 items-start h-full">
+                <div className="flex gap-8 items-start h-full">
                     {lists.map((list) => (
                         <Column
                             key={list.id}
                             list={list}
                             tasks={tasks.filter((t) => t.list_id === list.id)}
+                            onAddTask={() => addTask(list.id)}
+                            onTaskClick={setSelectedTask}
                         />
                     ))}
                 </div>
 
                 <DragOverlay>
                     {activeTask ? (
-                        <TaskCard task={activeTask} />
+                        <div className="rotate-3"><TaskCard task={activeTask} /></div>
                     ) : null}
                 </DragOverlay>
             </DndContext>
+
+            {selectedTask && (
+                <TaskModal
+                    task={selectedTask}
+                    onClose={() => setSelectedTask(null)}
+                />
+            )}
         </div>
     );
 }

@@ -17,7 +17,7 @@ const MOCK_GANTT_TASKS: GanttTask[] = [
         type: "task",
         progress: 45,
         isDisabled: false,
-        styles: { progressColor: "#2563eb", progressSelectedColor: "#1d4ed8" },
+        styles: { progressColor: "#8a9a5b", progressSelectedColor: "#7a8a4b" },
     },
     {
         start: addDays(new Date(), 2),
@@ -27,7 +27,7 @@ const MOCK_GANTT_TASKS: GanttTask[] = [
         type: "task",
         progress: 20,
         isDisabled: false,
-        styles: { progressColor: "#6366f1", progressSelectedColor: "#4f46e5" },
+        styles: { progressColor: "#a68b6d", progressSelectedColor: "#967b5d" },
     },
     {
         start: addDays(new Date(), 6),
@@ -37,7 +37,7 @@ const MOCK_GANTT_TASKS: GanttTask[] = [
         type: "task",
         progress: 0,
         isDisabled: false,
-        styles: { progressColor: "#8b5cf6", progressSelectedColor: "#7c3aed" },
+        styles: { progressColor: "#d27d56", progressSelectedColor: "#c26d46" },
     },
 ];
 
@@ -45,11 +45,11 @@ export function GanttChartView() {
     const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
 
     return (
-        <div className="flex flex-col h-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
+        <div className="flex flex-col h-full bg-[#fdfbfa] rounded-2xl border border-[#e8e3dd] overflow-hidden shadow-sm">
             {/* Gantt Header */}
-            <div className="flex items-center justify-between p-4 border-b border-slate-100">
-                <h3 className="text-lg font-bold text-slate-800">時間軸時程</h3>
-                <div className="flex bg-slate-100 p-1 rounded-lg">
+            <div className="flex items-center justify-between p-6 border-b border-[#f1efe9]">
+                <h3 className="text-xl font-bold text-[#4a3f35]">時間軸時程</h3>
+                <div className="flex bg-[#f1efe9] p-1.5 rounded-xl border border-[#e8e3dd]">
                     {[
                         { label: "小時", value: ViewMode.Hour },
                         { label: "1/4 天", value: ViewMode.QuarterDay },
@@ -62,8 +62,10 @@ export function GanttChartView() {
                             key={mode.value}
                             onClick={() => setView(mode.value)}
                             className={cn(
-                                "px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all",
-                                view === mode.value ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                                "px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-lg transition-all",
+                                view === mode.value
+                                    ? "bg-white text-[#8a9a5b] shadow-sm ring-1 ring-[#e8e3dd]"
+                                    : "text-[#a68b6d] hover:text-[#4a3f35] hover:bg-white/50"
                             )}
                         >
                             {mode.label}
@@ -73,23 +75,23 @@ export function GanttChartView() {
             </div>
 
             {/* Gantt Content */}
-            <div className="flex-1 overflow-auto p-4 gantt-container">
+            <div className="flex-1 overflow-auto p-6 gantt-container">
                 {MOCK_GANTT_TASKS.length > 0 ? (
                     <Gantt
                         tasks={MOCK_GANTT_TASKS}
                         viewMode={view}
                         listCellWidth="200px"
-                        columnWidth={view === ViewMode.Month ? 300 : 65}
+                        columnWidth={view === ViewMode.Month ? 300 : 80}
                         headerHeight={50}
-                        rowHeight={50}
-                        barCornerRadius={6}
-                        barFill={85}
-                        fontSize="12px"
+                        rowHeight={60}
+                        barCornerRadius={10}
+                        barFill={80}
+                        fontSize="13px"
                         locale="zh"
                     />
                 ) : (
-                    <div className="h-full flex flex-col items-center justify-center text-slate-400">
-                        <p>找不到有排程的任務。</p>
+                    <div className="h-full flex flex-col items-center justify-center text-[#a68b6d]">
+                        <p className="font-bold">找不到有排程的任務。</p>
                     </div>
                 )}
             </div>
@@ -99,7 +101,14 @@ export function GanttChartView() {
           background-color: transparent !important;
         }
         .gantt-container ._3_z_8 {
-          border-color: #f1f5f9 !important;
+          border-color: #f1efe9 !important;
+        }
+        .gantt-container ._11v_X {
+          color: #4a3f35 !important;
+          font-weight: 700 !important;
+        }
+        .gantt-container ._3_h_P rect {
+          fill: #fdfbfa !important;
         }
       `}</style>
         </div>

@@ -50,14 +50,14 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
 
       {/* Sidebar Container */}
       <aside className={cn(
-        "fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 transition-transform lg:translate-x-0 flex flex-col",
+        "fixed inset-y-0 left-0 z-40 w-64 bg-[#fdfbfa] border-r border-[#e8e3dd] transition-transform lg:translate-x-0 flex flex-col",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         <div className="flex flex-col h-full">
           {/* Logo / Header */}
           <div className="p-6">
-            <h1 className="text-xl font-bold text-blue-600 flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black text-xs">F</div>
+            <h1 className="text-xl font-bold text-[#4a3f35] flex items-center gap-2">
+              <div className="w-8 h-8 bg-[#8a9a5b] rounded-lg flex items-center justify-center text-white font-black text-xs shadow-sm">F</div>
               Fusion 任務管理
             </h1>
           </div>
@@ -72,24 +72,24 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
                   setIsOpen(false);
                 }}
                 className={cn(
-                  "flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-colors",
+                  "flex items-center gap-3 w-full px-4 py-3 rounded-lg text-sm font-medium transition-all",
                   activeView === item.value
-                    ? "bg-blue-50 text-blue-600"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                    ? "bg-[#8a9a5b]/10 text-[#8a9a5b]"
+                    : "text-[#6d6257] hover:bg-[#a68b6d]/5 hover:text-[#4a3f35]"
                 )}
               >
-                <item.icon size={20} />
+                <item.icon size={20} className={activeView === item.value ? "text-[#8a9a5b]" : "text-[#a68b6d]"} />
                 {item.label}
               </button>
             ))}
           </nav>
 
           {/* Auth Section */}
-          <div className="p-4 border-t border-slate-100 flex flex-col gap-3">
+          <div className="p-4 border-t border-[#f1efe9] flex flex-col gap-3">
             {user ? (
               <div className="space-y-3">
                 <div className="flex items-center gap-3 px-2 py-1">
-                  <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold overflow-hidden border border-blue-200">
+                  <div className="w-8 h-8 rounded-full bg-[#f1efe9] flex items-center justify-center text-[#8a9a5b] font-bold overflow-hidden border border-[#e8e3dd]">
                     {user.user_metadata.avatar_url ? (
                       <img src={user.user_metadata.avatar_url} alt="avatar" />
                     ) : (
@@ -97,13 +97,13 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
                     )}
                   </div>
                   <div className="flex-1 overflow-hidden">
-                    <p className="text-xs font-bold text-slate-800 truncate">{user.user_metadata.full_name || user.email}</p>
-                    <p className="text-[10px] text-slate-400 truncate">正式成員</p>
+                    <p className="text-xs font-bold text-[#4a3f35] truncate">{user.user_metadata.full_name || user.email}</p>
+                    <p className="text-[10px] text-[#a68b6d] truncate uppercase tracking-wider font-semibold">正式成員</p>
                   </div>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 w-full px-4 py-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg text-xs font-medium transition-all"
+                  className="flex items-center gap-2 w-full px-4 py-2 text-[#a68b6d] hover:text-[#d27d56] hover:bg-[#d27d56]/5 rounded-lg text-xs font-medium transition-all"
                 >
                   <LogOut size={14} />
                   登出
@@ -111,12 +111,12 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
               </div>
             ) : (
               <div className="px-2">
-                <p className="text-[11px] text-slate-400 mb-2 px-1 font-medium">帳號存取</p>
+                <p className="text-[11px] text-[#a68b6d] mb-2 px-1 font-semibold uppercase tracking-wider">帳號存取</p>
                 <LoginButton />
               </div>
             )}
 
-            <button className="flex items-center gap-2 w-full mt-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm active:scale-95 shadow-blue-100/50">
+            <button className="flex items-center gap-2 w-full mt-2 px-4 py-2.5 bg-[#8a9a5b] text-white rounded-lg text-sm font-bold hover:bg-[#7a8a4b] transition-all shadow-md active:scale-95 shadow-[#8a9a5b]/20">
               <Plus size={18} />
               新增任務
             </button>

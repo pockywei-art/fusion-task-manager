@@ -10,9 +10,10 @@ import { format } from "date-fns";
 
 interface TaskCardProps {
     task: Task;
+    onClick?: () => void;
 }
 
-export function TaskCard({ task }: TaskCardProps) {
+export function TaskCard({ task, onClick }: TaskCardProps) {
     const {
         attributes,
         listeners,
@@ -38,7 +39,7 @@ export function TaskCard({ task }: TaskCardProps) {
             <div
                 ref={setNodeRef}
                 style={style}
-                className="opacity-30 bg-slate-100 border-2 border-blue-200 rounded-lg p-4 mb-3 min-h-[100px]"
+                className="opacity-30 bg-[#f1efe9] border-2 border-[#8a9a5b]/30 rounded-xl p-4 mb-3 min-h-[100px]"
             />
         );
     }
@@ -49,40 +50,45 @@ export function TaskCard({ task }: TaskCardProps) {
             style={style}
             {...attributes}
             {...listeners}
-            className="bg-white border border-slate-200 rounded-lg p-4 mb-3 shadow-sm hover:border-blue-400 cursor-grab active:cursor-grabbing group transition-all"
+            onClick={(e) => {
+                // Prevent modal if we are dragging
+                if (transform) return;
+                onClick?.();
+            }}
+            className="bg-white border border-[#e8e3dd] rounded-xl p-4 mb-3 shadow-sm hover:border-[#8a9a5b] hover:shadow-md cursor-grab active:cursor-grabbing group transition-all duration-200"
         >
             {/* Priority Badge */}
             <div className="flex items-center gap-2 mb-2">
                 <span className={cn(
                     "px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider",
-                    task.priority === 'high' ? "bg-red-50 text-red-600" :
-                        task.priority === 'medium' ? "bg-orange-50 text-orange-600" :
-                            "bg-emerald-50 text-emerald-600"
+                    task.priority === 'high' ? "bg-[#d27d56]/10 text-[#d27d56]" :
+                        task.priority === 'medium' ? "bg-[#cc7722]/10 text-[#cc7722]" :
+                            "bg-[#8a9a5b]/10 text-[#8a9a5b]"
                 )}>
                     {task.priority === 'high' ? '高優先級' : task.priority === 'medium' ? '中優先級' : '低優先級'}
                 </span>
             </div>
 
-            <h4 className="text-sm font-semibold text-slate-800 leading-tight mb-3">
+            <h4 className="text-sm font-bold text-[#4a3f35] leading-snug mb-3 group-hover:text-[#8a9a5b] transition-colors">
                 {task.title}
             </h4>
 
             {/* Footer Info */}
-            <div className="flex items-center justify-between mt-4 text-slate-400">
+            <div className="flex items-center justify-between mt-4 text-[#a68b6d]">
                 <div className="flex items-center gap-3">
                     {task.end_date && (
-                        <div className="flex items-center gap-1 text-[11px]">
-                            <Calendar size={12} />
+                        <div className="flex items-center gap-1 text-[11px] font-medium">
+                            <Calendar size={12} className="text-[#a68b6d]" />
                             {format(new Date(task.end_date), "M月d日")}
                         </div>
                     )}
-                    <div className="flex items-center gap-1 text-[11px]">
-                        <MessageSquare size={12} />
+                    <div className="flex items-center gap-1 text-[11px] font-medium">
+                        <MessageSquare size={12} className="text-[#a68b6d]" />
                         <span>2</span>
                     </div>
                 </div>
 
-                <div className="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-500 overflow-hidden">
+                <div className="w-6 h-6 rounded-lg bg-[#f1efe9] border border-[#e8e3dd] flex items-center justify-center text-[#8a9a5b] overflow-hidden shadow-inner">
                     <User2 size={14} />
                 </div>
             </div>

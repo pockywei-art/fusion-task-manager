@@ -9,37 +9,46 @@ import { MoreHorizontal, Plus } from "lucide-react";
 interface ColumnProps {
     list: List;
     tasks: Task[];
+    onAddTask: () => void;
+    onTaskClick: (task: Task) => void;
 }
 
-export function Column({ list, tasks }: ColumnProps) {
+export function Column({ list, tasks, onAddTask, onTaskClick }: ColumnProps) {
     return (
-        <div className="flex-shrink-0 w-80 bg-slate-100/50 rounded-xl flex flex-col max-h-full border border-slate-200/60">
+        <div className="flex-shrink-0 w-80 bg-[#f1efe9]/30 rounded-2xl flex flex-col max-h-full border border-[#e8e3dd] shadow-sm">
             {/* Column Header */}
-            <div className="p-4 flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                    <h3 className="font-bold text-slate-700">{list.title}</h3>
-                    <span className="bg-slate-200 text-slate-500 text-[10px] px-2 py-0.5 rounded-full font-bold">
+            <div className="p-5 flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                    <h3 className="font-bold text-[#4a3f35] text-base">{list.title}</h3>
+                    <span className="bg-[#8a9a5b]/10 text-[#8a9a5b] text-[10px] px-2 py-0.5 rounded-full font-bold shadow-inner">
                         {tasks.length}
                     </span>
                 </div>
-                <button className="text-slate-400 hover:text-slate-600 p-1 rounded hover:bg-slate-200 transition-colors">
+                <button className="text-[#a68b6d] hover:text-[#4a3f35] p-1.5 rounded-lg hover:bg-[#f1efe9] transition-all">
                     <MoreHorizontal size={18} />
                 </button>
             </div>
 
             {/* Task List Container */}
-            <div className="flex-1 overflow-y-auto min-h-[50px] px-3 pb-4">
+            <div className="flex-1 overflow-y-auto min-h-[100px] px-3 pb-4 space-y-3">
                 <SortableContext items={tasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
                     {tasks.map((task) => (
-                        <TaskCard key={task.id} task={task} />
+                        <TaskCard
+                            key={task.id}
+                            task={task}
+                            onClick={() => onTaskClick(task)}
+                        />
                     ))}
                 </SortableContext>
             </div>
 
             {/* Column Footer */}
-            <div className="p-3">
-                <button className="flex items-center gap-2 w-full px-3 py-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50/50 rounded-lg text-sm font-medium transition-all group">
-                    <Plus size={16} className="group-hover:scale-110 transition-transform" />
+            <div className="p-4">
+                <button
+                    onClick={onAddTask}
+                    className="flex items-center gap-2 w-full px-4 py-3 text-[#a68b6d] hover:text-[#8a9a5b] hover:bg-[#8a9a5b]/10 rounded-xl text-sm font-bold transition-all group border border-dashed border-[#e8e3dd] hover:border-[#8a9a5b]/30"
+                >
+                    <Plus size={18} className="group-hover:scale-110 transition-transform" />
                     新增卡片
                 </button>
             </div>
