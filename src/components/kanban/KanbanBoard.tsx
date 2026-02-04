@@ -124,6 +124,16 @@ export function KanbanBoard() {
         setTasks([...tasks, newTask]);
     };
 
+    React.useEffect(() => {
+        const handleGlobalAddTask = () => {
+            // Default to first list (list-1) if triggered globally
+            addTask("list-1");
+        };
+
+        window.addEventListener("addNewTask", handleGlobalAddTask);
+        return () => window.removeEventListener("addNewTask", handleGlobalAddTask);
+    }, [tasks]);
+
     return (
         <div className="flex h-full overflow-x-auto gap-8 pb-6 scrollbar-hide">
             <DndContext

@@ -14,7 +14,11 @@ const menuItems = [
   { icon: Settings, label: "設定", value: "settings" },
 ];
 
-export function Sidebar({ activeView, onViewChange }: { activeView: string, onViewChange: (view: string) => void }) {
+export function Sidebar({ activeView, onViewChange, onNewTask }: {
+  activeView: string,
+  onViewChange: (view: string) => void,
+  onNewTask: () => void
+}) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [user, setUser] = React.useState<UserType | null>(null);
 
@@ -40,7 +44,7 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
 
   return (
     <>
-      {/* Mobile Menu Button */}
+      {/* Mobile Menu Button ... */}
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-md shadow-md"
@@ -116,7 +120,10 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
               </div>
             )}
 
-            <button className="flex items-center gap-2 w-full mt-2 px-4 py-2.5 bg-[#8a9a5b] text-white rounded-lg text-sm font-bold hover:bg-[#7a8a4b] transition-all shadow-md active:scale-95 shadow-[#8a9a5b]/20">
+            <button
+              onClick={onNewTask}
+              className="flex items-center gap-2 w-full mt-2 px-4 py-2.5 bg-[#8a9a5b] text-white rounded-lg text-sm font-bold hover:bg-[#7a8a4b] transition-all shadow-md active:scale-95 shadow-[#8a9a5b]/20"
+            >
               <Plus size={18} />
               新增任務
             </button>

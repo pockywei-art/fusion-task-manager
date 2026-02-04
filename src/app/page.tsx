@@ -10,9 +10,28 @@ import { GanttChartView } from "@/components/gantt/GanttChartView";
 export default function Home() {
     const [activeView, setActiveView] = React.useState("kanban");
 
+    const handleNewTask = () => {
+        if (activeView === "kanban") {
+            // We can use a custom event or ref to trigger the KanbanBoard's internal add function
+            const event = new CustomEvent("addNewTask");
+            window.dispatchEvent(event);
+        } else {
+            setActiveView("kanban");
+            // Delay slightly to allow view to switch before firing event
+            setTimeout(() => {
+                const event = new CustomEvent("addNewTask");
+                window.dispatchEvent(event);
+            }, 100);
+        }
+    };
+
     return (
         <div className="flex min-h-screen bg-[#fdfbfa]">
-            <Sidebar activeView={activeView} onViewChange={setActiveView} />
+            <Sidebar
+                activeView={activeView}
+                onViewChange={setActiveView}
+                onNewTask={handleNewTask}
+            />
 
             <main className="flex-1 lg:ml-64 p-8 transition-all">
                 <header className="mb-10">
