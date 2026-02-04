@@ -14,7 +14,7 @@ const menuItems = [
   { icon: Settings, label: "設定", value: "settings" },
 ];
 
-export function Sidebar({ activeView, onViewChange }: { activeView: string, onViewChange: (view: any) => void }) {
+export function Sidebar({ activeView, onViewChange }: { activeView: string, onViewChange: (view: string) => void }) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [user, setUser] = React.useState<UserType | null>(null);
 

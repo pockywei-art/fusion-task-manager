@@ -47,7 +47,7 @@ export interface ActivityLog {
     task_id: string | null;
     user_id: string | null;
     action: string;
-    metadata: Record<string, any>;
+    metadata: Record<string, unknown>;
     created_at: string;
 }
 

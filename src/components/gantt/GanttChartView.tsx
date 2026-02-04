@@ -5,6 +5,7 @@ import { Gantt, Task as GanttTask, ViewMode } from "gantt-task-react";
 import "gantt-task-react/dist/index.css";
 import { Task } from "@/types/database";
 import { addDays } from "date-fns";
+import { cn } from "@/lib/utils";
 
 // Mock data converted to Gantt format
 const MOCK_GANTT_TASKS: GanttTask[] = [
@@ -105,5 +106,4 @@ export function GanttChartView() {
     );
 }
 
-// Helper to keep code clean since cn is in @/lib/utils but I need it here
-import { cn } from "@/lib/utils";
+
