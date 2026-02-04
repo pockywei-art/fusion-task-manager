@@ -13,14 +13,15 @@ import {
     addMonths,
     subMonths
 } from "date-fns";
+import { zhTW } from "date-fns/locale";
 import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
 import { Task } from "@/types/database";
 import { cn } from "@/lib/utils";
 
 // Mock tasks for calendar demo
 const MOCK_CALENDAR_TASKS: Task[] = [
-    { id: "task-1", list_id: "list-1", title: "Monthly Sync Meeting", description: "", position: 1, start_date: null, end_date: new Date().toISOString(), assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
-    { id: "task-4", list_id: "list-1", title: "Project Deadline", description: "", position: 2, start_date: null, end_date: addMonths(new Date(), 0).toISOString(), assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
+    { id: "task-1", list_id: "list-1", title: "每月同步會議", description: "", position: 1, start_date: null, end_date: new Date().toISOString(), assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
+    { id: "task-4", list_id: "list-1", title: "專案截稿日", description: "", position: 2, start_date: null, end_date: addMonths(new Date(), 0).toISOString(), assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
 ];
 
 export function CalendarView() {
@@ -44,7 +45,7 @@ export function CalendarView() {
             {/* Calendar Header */}
             <div className="flex items-center justify-between p-4 border-b border-slate-100">
                 <h3 className="text-xl font-bold text-slate-800">
-                    {format(currentDate, "MMMM yyyy")}
+                    {format(currentDate, "yyyy年 MMMM", { locale: zhTW })}
                 </h3>
                 <div className="flex items-center gap-2">
                     <button onClick={prevMonth} className="p-2 hover:bg-slate-50 rounded-full transition-colors">
@@ -54,7 +55,7 @@ export function CalendarView() {
                         onClick={() => setCurrentDate(new Date())}
                         className="px-4 py-1.5 text-sm font-medium border border-slate-200 rounded-lg hover:bg-slate-50"
                     >
-                        Today
+                        今天
                     </button>
                     <button onClick={nextMonth} className="p-2 hover:bg-slate-50 rounded-full transition-colors">
                         <ChevronRight size={20} />
@@ -64,7 +65,7 @@ export function CalendarView() {
 
             {/* Weekdays Header */}
             <div className="grid grid-cols-7 border-b border-slate-100 bg-slate-50/50">
-                {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+                {["週日", "週一", "週二", "週三", "週四", "週五", "週六"].map((day) => (
                     <div key={day} className="py-2 text-center text-xs font-bold text-slate-400 uppercase tracking-wider">
                         {day}
                     </div>

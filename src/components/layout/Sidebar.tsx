@@ -8,10 +8,10 @@ import { LoginButton } from "@/components/auth/LoginButton";
 import { User as UserType } from "@supabase/supabase-js";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Kanban Board", value: "kanban" },
-  { icon: BarChart3, label: "Gantt Chart", value: "gantt" },
-  { icon: Menu, label: "Calendar", value: "calendar" },
-  { icon: Settings, label: "Settings", value: "settings" },
+  { icon: LayoutDashboard, label: "看板", value: "kanban" },
+  { icon: BarChart3, label: "甘特圖", value: "gantt" },
+  { icon: Menu, label: "日曆", value: "calendar" },
+  { icon: Settings, label: "設定", value: "settings" },
 ];
 
 export function Sidebar({ activeView, onViewChange }: { activeView: string, onViewChange: (view: any) => void }) {
@@ -58,7 +58,7 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
           <div className="p-6">
             <h1 className="text-xl font-bold text-blue-600 flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-black text-xs">F</div>
-              Fusion Tasks
+              Fusion 任務管理
             </h1>
           </div>
 
@@ -98,7 +98,7 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
                   </div>
                   <div className="flex-1 overflow-hidden">
                     <p className="text-xs font-bold text-slate-800 truncate">{user.user_metadata.full_name || user.email}</p>
-                    <p className="text-[10px] text-slate-400 truncate">Member</p>
+                    <p className="text-[10px] text-slate-400 truncate">正式成員</p>
                   </div>
                 </div>
                 <button
@@ -106,19 +106,19 @@ export function Sidebar({ activeView, onViewChange }: { activeView: string, onVi
                   className="flex items-center gap-2 w-full px-4 py-2 text-slate-500 hover:text-red-500 hover:bg-red-50 rounded-lg text-xs font-medium transition-all"
                 >
                   <LogOut size={14} />
-                  Logout
+                  登出
                 </button>
               </div>
             ) : (
               <div className="px-2">
-                <p className="text-[11px] text-slate-400 mb-2 px-1 font-medium">Account Access</p>
+                <p className="text-[11px] text-slate-400 mb-2 px-1 font-medium">帳號存取</p>
                 <LoginButton />
               </div>
             )}
 
             <button className="flex items-center gap-2 w-full mt-2 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors shadow-sm active:scale-95 shadow-blue-100/50">
               <Plus size={18} />
-              New Task
+              新增任務
             </button>
           </div>
         </div>

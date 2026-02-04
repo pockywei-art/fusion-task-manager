@@ -59,7 +59,7 @@ export function TaskCard({ task }: TaskCardProps) {
                         task.priority === 'medium' ? "bg-orange-50 text-orange-600" :
                             "bg-emerald-50 text-emerald-600"
                 )}>
-                    {task.priority}
+                    {task.priority === 'high' ? '高優先級' : task.priority === 'medium' ? '中優先級' : '低優先級'}
                 </span>
             </div>
 
@@ -73,7 +73,7 @@ export function TaskCard({ task }: TaskCardProps) {
                     {task.end_date && (
                         <div className="flex items-center gap-1 text-[11px]">
                             <Calendar size={12} />
-                            {format(new Date(task.end_date), "MMM d")}
+                            {format(new Date(task.end_date), "M月d日")}
                         </div>
                     )}
                     <div className="flex items-center gap-1 text-[11px]">

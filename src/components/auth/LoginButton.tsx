@@ -25,7 +25,7 @@ export function LoginButton() {
             className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg font-medium hover:bg-slate-50 transition-all shadow-sm"
         >
             <LogIn size={18} />
-            Login with Google
+            使用 Google 登入
         </button>
     );
 }

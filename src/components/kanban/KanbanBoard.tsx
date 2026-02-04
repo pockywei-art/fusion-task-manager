@@ -25,15 +25,15 @@ import { TaskCard } from "./TaskCard";
 
 // Mock initial data
 const INITIAL_LISTS: List[] = [
-    { id: "list-1", board_id: "board-1", title: "To Do", position: 1, created_at: "" },
-    { id: "list-2", board_id: "board-1", title: "In Progress", position: 2, created_at: "" },
-    { id: "list-3", board_id: "board-1", title: "Completed", position: 3, created_at: "" },
+    { id: "list-1", board_id: "board-1", title: "待處理", position: 1, created_at: "" },
+    { id: "list-2", board_id: "board-1", title: "進行中", position: 2, created_at: "" },
+    { id: "list-3", board_id: "board-1", title: "已完成", position: 3, created_at: "" },
 ];
 
 const INITIAL_TASKS: Task[] = [
-    { id: "task-1", list_id: "list-1", title: "Design System Implementation", description: "", position: 1, start_date: null, end_date: "2024-02-10", assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
-    { id: "task-2", list_id: "list-1", title: "User Authentication Library", description: "", position: 2, start_date: null, end_date: "2024-02-12", assignee_id: null, priority: "medium", status: "todo", created_at: "", updated_at: "" },
-    { id: "task-3", list_id: "list-2", title: "Kanban Drag & Drop Logic", description: "", position: 1, start_date: null, end_date: "2024-02-05", assignee_id: null, priority: "high", status: "doing", created_at: "", updated_at: "" },
+    { id: "task-1", list_id: "list-1", title: "設計系統實作", description: "", position: 1, start_date: null, end_date: "2024-02-10", assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
+    { id: "task-2", list_id: "list-1", title: "使用者驗證函式庫", description: "", position: 2, start_date: null, end_date: "2024-02-12", assignee_id: null, priority: "medium", status: "todo", created_at: "", updated_at: "" },
+    { id: "task-3", list_id: "list-2", title: "看板拖放邏輯", description: "", position: 1, start_date: null, end_date: "2024-02-05", assignee_id: null, priority: "high", status: "doing", created_at: "", updated_at: "" },
 ];
 
 export function KanbanBoard() {

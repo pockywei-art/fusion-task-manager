@@ -11,7 +11,7 @@ const MOCK_GANTT_TASKS: GanttTask[] = [
     {
         start: new Date(),
         end: addDays(new Date(), 5),
-        name: "Design System Phase 1",
+        name: "設計系統第一階段",
         id: "task-1",
         type: "task",
         progress: 45,
@@ -21,7 +21,7 @@ const MOCK_GANTT_TASKS: GanttTask[] = [
     {
         start: addDays(new Date(), 2),
         end: addDays(new Date(), 10),
-        name: "Authentication Integration",
+        name: "驗證登入整合",
         id: "task-2",
         type: "task",
         progress: 20,
@@ -31,7 +31,7 @@ const MOCK_GANTT_TASKS: GanttTask[] = [
     {
         start: addDays(new Date(), 6),
         end: addDays(new Date(), 15),
-        name: "Kanban Performance Optimization",
+        name: "看板效能優化",
         id: "task-3",
         type: "task",
         progress: 0,
@@ -47,18 +47,25 @@ export function GanttChartView() {
         <div className="flex flex-col h-full bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm">
             {/* Gantt Header */}
             <div className="flex items-center justify-between p-4 border-b border-slate-100">
-                <h3 className="text-lg font-bold text-slate-800">Timeline Schedule</h3>
+                <h3 className="text-lg font-bold text-slate-800">時間軸時程</h3>
                 <div className="flex bg-slate-100 p-1 rounded-lg">
-                    {(["Hour", "Quarter Day", "Half Day", "Day", "Week", "Month"] as ViewMode[]).map((mode) => (
+                    {[
+                        { label: "小時", value: ViewMode.Hour },
+                        { label: "1/4 天", value: ViewMode.QuarterDay },
+                        { label: "半天", value: ViewMode.HalfDay },
+                        { label: "天", value: ViewMode.Day },
+                        { label: "週", value: ViewMode.Week },
+                        { label: "月", value: ViewMode.Month },
+                    ].map((mode) => (
                         <button
-                            key={mode}
-                            onClick={() => setView(mode)}
+                            key={mode.value}
+                            onClick={() => setView(mode.value)}
                             className={cn(
                                 "px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all",
-                                view === mode ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
+                                view === mode.value ? "bg-white text-blue-600 shadow-sm" : "text-slate-500 hover:text-slate-700"
                             )}
                         >
-                            {mode}
+                            {mode.label}
                         </button>
                     ))}
                 </div>
@@ -77,11 +84,11 @@ export function GanttChartView() {
                         barCornerRadius={6}
                         barFill={85}
                         fontSize="12px"
-                        locale="en-US"
+                        locale="zh"
                     />
                 ) : (
                     <div className="h-full flex flex-col items-center justify-center text-slate-400">
-                        <p>No tasks with schedule found.</p>
+                        <p>找不到有排程的任務。</p>
                     </div>
                 )}
             </div>

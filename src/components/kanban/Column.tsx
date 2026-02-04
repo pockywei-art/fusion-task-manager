@@ -40,7 +40,7 @@ export function Column({ list, tasks }: ColumnProps) {
             <div className="p-3">
                 <button className="flex items-center gap-2 w-full px-3 py-2 text-slate-500 hover:text-blue-600 hover:bg-blue-50/50 rounded-lg text-sm font-medium transition-all group">
                     <Plus size={16} className="group-hover:scale-110 transition-transform" />
-                    Add a card
+                    新增卡片
                 </button>
             </div>
         </div>

@@ -15,14 +15,17 @@ export default function Home() {
 
             <main className="flex-1 lg:ml-64 p-8 transition-all">
                 <header className="mb-8">
-                    <h2 className="text-3xl font-bold text-slate-900 capitalize">
-                        {activeView.replace("-", " ")}
+                    <h2 className="text-3xl font-bold text-slate-900">
+                        {activeView === "kanban" && "看板"}
+                        {activeView === "gantt" && "甘特圖"}
+                        {activeView === "calendar" && "月曆"}
+                        {activeView === "settings" && "設定"}
                     </h2>
                     <p className="text-slate-500 mt-2">
-                        {activeView === "kanban" && "Manage your tasks visually with cards and lists."}
-                        {activeView === "gantt" && "Track project timelines and dependencies."}
-                        {activeView === "calendar" && "View your task schedule on a monthly calendar."}
-                        {activeView === "settings" && "Configure project settings and workflows."}
+                        {activeView === "kanban" && "透過卡片與清單視覺化管理您的任務。"}
+                        {activeView === "gantt" && "追蹤專案時間軸與相依性。"}
+                        {activeView === "calendar" && "在月曆上查看您的任務時程。"}
+                        {activeView === "settings" && "配置專案設定與工作流。"}
                     </p>
                 </header>
 
@@ -36,7 +39,7 @@ export default function Home() {
 
                     {activeView === "settings" && (
                         <div className="bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl h-full flex items-center justify-center">
-                            <p className="text-slate-400 font-medium">Settings Module will be here</p>
+                            <p className="text-slate-400 font-medium">設定模組開發中</p>
                         </div>
                     )}
                 </div>
