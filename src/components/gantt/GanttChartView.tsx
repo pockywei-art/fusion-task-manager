@@ -7,42 +7,35 @@ import { Task } from "@/types/database";
 import { addDays } from "date-fns";
 import { cn } from "@/lib/utils";
 
-// Mock data converted to Gantt format
-const MOCK_GANTT_TASKS: GanttTask[] = [
-    {
-        start: new Date(),
-        end: addDays(new Date(), 5),
-        name: "設計系統第一階段",
-        id: "task-1",
-        type: "task",
-        progress: 45,
-        isDisabled: false,
-        styles: { progressColor: "#8a9a5b", progressSelectedColor: "#7a8a4b" },
-    },
-    {
-        start: addDays(new Date(), 2),
-        end: addDays(new Date(), 10),
-        name: "驗證登入整合",
-        id: "task-2",
-        type: "task",
-        progress: 20,
-        isDisabled: false,
-        styles: { progressColor: "#a68b6d", progressSelectedColor: "#967b5d" },
-    },
-    {
-        start: addDays(new Date(), 6),
-        end: addDays(new Date(), 15),
-        name: "看板效能優化",
-        id: "task-3",
-        type: "task",
-        progress: 0,
-        isDisabled: false,
-        styles: { progressColor: "#d27d56", progressSelectedColor: "#c26d46" },
-    },
-];
+import { useTasks } from "@/hooks/useTasks";
 
 export function GanttChartView() {
+    const { tasks, loading } = useTasks();
     const [view, setView] = React.useState<ViewMode>(ViewMode.Day);
+
+    const ganttTasks: GanttTask[] = tasks
+        .filter(t => t.start_date || t.end_date)
+        .map(t => ({
+            start: t.start_date ? new Date(t.start_date) : new Date(t.end_date!),
+            end: t.end_date ? new Date(t.end_date) : addDays(new Date(t.start_date!), 1),
+            name: t.title,
+            id: t.id,
+            type: "task",
+            progress: t.status === 'done' ? 100 : t.status === 'doing' ? 50 : 0,
+            isDisabled: false,
+            styles: {
+                progressColor: t.priority === 'high' ? "#d27d56" : t.priority === 'medium' ? "#cc7722" : "#8a9a5b",
+                progressSelectedColor: t.priority === 'high' ? "#c26d46" : t.priority === 'medium' ? "#bc6712" : "#7a8a4b"
+            },
+        }));
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8a9a5b]"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col h-full bg-[#fdfbfa] rounded-2xl border border-[#e8e3dd] overflow-hidden shadow-sm">
@@ -76,9 +69,9 @@ export function GanttChartView() {
 
             {/* Gantt Content */}
             <div className="flex-1 overflow-auto p-6 gantt-container">
-                {MOCK_GANTT_TASKS.length > 0 ? (
+                {ganttTasks.length > 0 ? (
                     <Gantt
-                        tasks={MOCK_GANTT_TASKS}
+                        tasks={ganttTasks}
                         viewMode={view}
                         listCellWidth="200px"
                         columnWidth={view === ViewMode.Month ? 300 : 80}

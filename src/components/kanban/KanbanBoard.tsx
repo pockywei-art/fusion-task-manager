@@ -23,30 +23,17 @@ import { List, Task } from "@/types/database";
 import { Column } from "./Column";
 import { TaskCard } from "./TaskCard";
 import { TaskModal } from "./TaskModal";
-
-// Mock initial data
-const INITIAL_LISTS: List[] = [
-    { id: "list-1", board_id: "board-1", title: "待處理", position: 1, created_at: "" },
-    { id: "list-2", board_id: "board-1", title: "進行中", position: 2, created_at: "" },
-    { id: "list-3", board_id: "board-1", title: "已完成", position: 3, created_at: "" },
-];
-
-const INITIAL_TASKS: Task[] = [
-    { id: "task-1", list_id: "list-1", title: "設計系統實作", description: "實作基於大地色系的設計系統，包含色彩規範與陰影細節。", position: 1, start_date: null, end_date: "2024-02-10", assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
-    { id: "task-2", list_id: "list-1", title: "使用者驗證函式庫", description: "串接 Supabase Auth 進行 Google 第三方登入驗證。", position: 2, start_date: null, end_date: "2024-02-12", assignee_id: null, priority: "medium", status: "todo", created_at: "", updated_at: "" },
-    { id: "task-3", list_id: "list-2", title: "看板拖放邏輯", description: "使用 dnd-kit 實作流暢的卡片拖放與排序功能。", position: 1, start_date: null, end_date: "2024-02-05", assignee_id: null, priority: "high", status: "doing", created_at: "", updated_at: "" },
-];
+import { useTasks } from "@/hooks/useTasks";
 
 export function KanbanBoard() {
-    const [lists, setLists] = useState(INITIAL_LISTS);
-    const [tasks, setTasks] = useState(INITIAL_TASKS);
+    const { lists, tasks, loading, addTask, updateTask, deleteTask, moveTask } = useTasks();
     const [activeTask, setActiveTask] = useState<Task | null>(null);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor, {
             activationConstraint: {
-                distance: 5, // Avoid accidental drag on click
+                distance: 5,
             },
         }),
         useSensor(KeyboardSensor, {
@@ -60,79 +47,56 @@ export function KanbanBoard() {
         }
     }
 
-    function onDragOver(event: DragOverEvent) {
+    async function onDragEnd(event: DragEndEvent) {
         const { active, over } = event;
+        setActiveTask(null);
+
         if (!over) return;
 
-        const activeId = active.id;
-        const overId = over.id;
+        const activeId = active.id as string;
+        const overId = over.id as string;
 
         if (activeId === overId) return;
 
         const isActiveATask = active.data.current?.type === "Task";
         const isOverATask = over.data.current?.type === "Task";
+        const isOverAColumn = over.data.current?.type === "Column";
 
         if (!isActiveATask) return;
 
-        // Implements dropping a task over another task
-        if (isActiveATask && isOverATask) {
-            setTasks((tasks) => {
-                const activeIndex = tasks.findIndex((t) => t.id === activeId);
-                const overIndex = tasks.findIndex((t) => t.id === overId);
+        if (isOverATask) {
+            const activeIndex = tasks.findIndex((t) => t.id === activeId);
+            const overIndex = tasks.findIndex((t) => t.id === overId);
+            const newListId = tasks[overIndex].list_id;
 
-                if (tasks[activeIndex].list_id !== tasks[overIndex].list_id) {
-                    const updatedTasks = [...tasks];
-                    updatedTasks[activeIndex].list_id = tasks[overIndex].list_id;
-                    return arrayMove(updatedTasks, activeIndex, overIndex);
-                }
-
-                return arrayMove(tasks, activeIndex, overIndex);
-            });
+            // In a real app we'd recalculate positions for all tasks in the list
+            // For now, we'll just update this task's list and position
+            await moveTask(activeId, newListId, overIndex);
         }
 
-        // Implements dropping a task over a column
-        const isOverAColumn = over.data.current?.type === "Column";
-        if (isActiveATask && isOverAColumn) {
-            setTasks((tasks) => {
-                const activeIndex = tasks.findIndex((t) => t.id === activeId);
-                const updatedTasks = [...tasks];
-                updatedTasks[activeIndex].list_id = overId as string;
-                return arrayMove(updatedTasks, activeIndex, activeIndex);
-            });
+        if (isOverAColumn) {
+            await moveTask(activeId, overId, tasks.length);
         }
     }
-
-    function onDragEnd(event: DragEndEvent) {
-        setActiveTask(null);
-    }
-
-    const addTask = (listId: string) => {
-        const newTask: Task = {
-            id: `task-${Date.now()}`,
-            list_id: listId,
-            title: "新任務名稱",
-            description: "",
-            position: tasks.length + 1,
-            start_date: null,
-            end_date: new Date().toISOString(),
-            assignee_id: null,
-            priority: "medium",
-            status: "todo",
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-        };
-        setTasks([...tasks, newTask]);
-    };
 
     React.useEffect(() => {
         const handleGlobalAddTask = () => {
-            // Default to first list (list-1) if triggered globally
-            addTask("list-1");
+            if (lists.length > 0) {
+                addTask(lists[0].id);
+            }
         };
 
         window.addEventListener("addNewTask", handleGlobalAddTask);
         return () => window.removeEventListener("addNewTask", handleGlobalAddTask);
-    }, [tasks]);
+    }, [lists, addTask]);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8a9a5b]"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex h-full overflow-x-auto gap-8 pb-6 scrollbar-hide">
@@ -140,7 +104,6 @@ export function KanbanBoard() {
                 sensors={sensors}
                 collisionDetection={closestCorners}
                 onDragStart={onDragStart}
-                onDragOver={onDragOver}
                 onDragEnd={onDragEnd}
             >
                 <div className="flex gap-8 items-start h-full">
@@ -157,7 +120,9 @@ export function KanbanBoard() {
 
                 <DragOverlay>
                     {activeTask ? (
-                        <div className="rotate-3"><TaskCard task={activeTask} /></div>
+                        <div className="rotate-3 shadow-2xl scale-105 transition-transform">
+                            <TaskCard task={activeTask} />
+                        </div>
                     ) : null}
                 </DragOverlay>
             </DndContext>
@@ -166,6 +131,8 @@ export function KanbanBoard() {
                 <TaskModal
                     task={selectedTask}
                     onClose={() => setSelectedTask(null)}
+                    onUpdate={updateTask}
+                    onDelete={deleteTask}
                 />
             )}
         </div>

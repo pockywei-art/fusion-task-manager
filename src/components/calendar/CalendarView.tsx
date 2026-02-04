@@ -18,13 +18,10 @@ import { ChevronLeft, ChevronRight, MoreVertical } from "lucide-react";
 import { Task } from "@/types/database";
 import { cn } from "@/lib/utils";
 
-// Mock tasks for calendar demo
-const MOCK_CALENDAR_TASKS: Task[] = [
-    { id: "task-1", list_id: "list-1", title: "每月同步會議", description: "", position: 1, start_date: null, end_date: new Date().toISOString(), assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
-    { id: "task-4", list_id: "list-1", title: "專案截稿日", description: "", position: 2, start_date: null, end_date: addMonths(new Date(), 0).toISOString(), assignee_id: null, priority: "high", status: "todo", created_at: "", updated_at: "" },
-];
+import { useTasks } from "@/hooks/useTasks";
 
 export function CalendarView() {
+    const { tasks, loading } = useTasks();
     const [currentDate, setCurrentDate] = useState(new Date());
 
     const monthStart = startOfMonth(currentDate);
@@ -39,6 +36,14 @@ export function CalendarView() {
 
     const nextMonth = () => setCurrentDate(addMonths(currentDate, 1));
     const prevMonth = () => setCurrentDate(subMonths(currentDate, 1));
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center h-full">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#8a9a5b]"></div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col h-full bg-[#fdfbfa] rounded-2xl border border-[#e8e3dd] overflow-hidden shadow-sm">
@@ -75,7 +80,7 @@ export function CalendarView() {
             {/* Calendar Grid */}
             <div className="flex-1 grid grid-cols-7 auto-rows-fr overflow-y-auto">
                 {days.map((day, idx) => {
-                    const dayTasks = MOCK_CALENDAR_TASKS.filter(t => t.end_date && isSameDay(new Date(t.end_date), day));
+                    const dayTasks = tasks.filter(t => t.end_date && isSameDay(new Date(t.end_date), day));
                     const isToday = isSameDay(day, new Date());
                     const isCurrentMonth = isSameMonth(day, monthStart);
 
